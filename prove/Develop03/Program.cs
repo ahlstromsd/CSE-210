@@ -7,3 +7,18 @@ class Program
         Console.WriteLine("Hello Develop03 World!");
     }
 }
+
+class Word 
+{
+
+}
+
+class Scripture
+{
+
+}
+
+class ScriptureReference
+{
+    
+}
