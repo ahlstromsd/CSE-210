@@ -105,6 +105,70 @@ class Player
     }
 }
 
+// Quest class representing a quest or mission
+class Quest
+{
+    public string QuestName { get; set; }
+    public string Description { get; set; }
+    public bool IsCompleted { get; private set; }
+
+    public Quest(string questName, string description)
+    {
+        QuestName = questName;
+        Description = description;
+        IsCompleted = false;
+    }
+
+    public void CompleteQuest()
+    {
+        IsCompleted = true;
+        Console.WriteLine($"Quest '{QuestName}' completed!");
+    }
+}
+
+// Base Trap class with general functionality
+abstract class Trap
+{
+    public string TrapName { get; set; }
+    public int Damage { get; set; }
+
+    protected Trap(string trapName, int damage)
+    {
+        TrapName = trapName;
+        Damage = damage;
+    }
+
+    public abstract void Activate(Player player); // Abstract method to be implemented in derived classes
+}
+
+// Specific type of Trap: SpikeTrap
+class SpikeTrap : Trap
+{
+    public SpikeTrap() : base("Spike Trap", 20)
+    {
+    }
+
+    public override void Activate(Player player)
+    {
+        player.Health -= Damage;
+        Console.WriteLine($"You triggered a {TrapName} and took {Damage} damage!");
+    }
+}
+
+// Specific type of Trap: FireTrap
+class FireTrap : Trap
+{
+    public FireTrap() : base("Fire Trap", 30)
+    {
+    }
+
+    public override void Activate(Player player)
+    {
+        player.Health -= Damage;
+        Console.WriteLine($"You triggered a {TrapName} and took {Damage} damage from the flames!");
+    }
+}
+
 // Room class representing a room in the dungeon
 class Room
 {
@@ -112,13 +176,15 @@ class Room
     public Monster Monster { get; private set; }
     public List<Item> Items { get; private set; }
     public Room InnerRoom { get; set; }
+    public List<Trap> Traps { get; private set; } // List of traps in the room
 
-    public Room(string description, Monster monster = null, List<Item> items = null, Room innerRoom = null)
+    public Room(string description, Monster monster = null, List<Item> items = null, Room innerRoom = null, List<Trap> traps = null)
     {
         Description = description;
         Monster = monster;
         Items = items ?? new List<Item>();
         InnerRoom = innerRoom;
+        Traps = traps ?? new List<Trap>(); // Initialize traps if provided
     }
 
     public void DisplayRoomDetails()
@@ -135,6 +201,22 @@ class Room
             {
                 Console.WriteLine($"- {item.Name}");
             }
+        }
+        if (Traps.Count > 0)
+        {
+            Console.WriteLine("Traps in this room:");
+            foreach (var trap in Traps)
+            {
+                Console.WriteLine($"- {trap.TrapName}");
+            }
+        }
+    }
+
+    public void TriggerTraps(Player player)
+    {
+        foreach (var trap in Traps)
+        {
+            trap.Activate(player);
         }
     }
 
@@ -156,6 +238,7 @@ class Dungeon
     private Player Player { get; set; }
     private Room CurrentRoom { get; set; }
     private bool HasLookedAround { get; set; }
+    private List<Quest> Quests { get; set; }
 
     public Dungeon(Player player)
     {
@@ -168,10 +251,15 @@ class Dungeon
             new Room("Room 4: A brightly lit room with high ceilings.", new Monster("Dragon", 100, 20))
         };
 
-        // Add an inner room with a sword to room 1
         Rooms[0].InnerRoom = new Room("Inner Room: A small armory with a shining sword.", null, new List<Item> { new Item("Sword", 10, 0, 0) });
         Rooms[2].InnerRoom = new Room("Inner Room: A small closet with broken bottles on shelves. Only one is intact, it's a health potion!", null, new List<Item> { new Item("Health Potion", 0, 0, 30)});
         Rooms[3].InnerRoom = new Room("Inner Room: A room filled with gold and jewels. You've won the game!");
+
+        Quests = new List<Quest>
+        {
+            new Quest("Retrieve the Sword", "Find the sword in the inner room of Room 1"),
+            new Quest("Defeat the Dragon", "Defeat the dragon in Room 4")
+        };
     }
     
     private void MovePlayer(int roomIndex)
