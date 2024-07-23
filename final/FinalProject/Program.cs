@@ -170,28 +170,10 @@ class Dungeon
 
         // Add an inner room with a sword to room 1
         Rooms[0].InnerRoom = new Room("Inner Room: A small armory with a shining sword.", null, new List<Item> { new Item("Sword", 10, 0, 0) });
-        CurrentRoom = Rooms[0];
-
         Rooms[2].InnerRoom = new Room("Inner Room: A small closet with broken bottles on shelves. Only one is intact, it's a health potion!", null, new List<Item> { new Item("Health Potion", 0, 0, 30)});
-        CurrentRoom = Rooms[2];
-
         Rooms[3].InnerRoom = new Room("Inner Room: A room filled with gold and jewels. You've won the game!");
-        CurrentRoom = Rooms[3];
     }
     
-
-//FIX ABOVE^^^ add inner room to room 3 with health potion. also add health potion to items class
-
-
-
-
-
-
-
-
-
-
-
     private void MovePlayer(int roomIndex)
     {
         CurrentRoom = Rooms[roomIndex];
@@ -321,8 +303,10 @@ class Dungeon
         {
             Player.DisplayStatus();
             Console.WriteLine("\nWhat would you like to do?");
-            Console.WriteLine("1. Pick up item");
-            Console.WriteLine("2. Exit inner room");
+
+                Console.WriteLine("1. Pick up item");
+                Console.WriteLine("2. Exit inner room");
+
 
             var choice = Console.ReadLine();
 
@@ -365,6 +349,11 @@ class Dungeon
             if (Player.Health <= 0)
             {
                 Console.WriteLine("You have died. Game over.");
+                Environment.Exit(0);
+            }
+            else if (CurrentRoom == Rooms[3].InnerRoom)
+            {
+                Console.WriteLine("You have entered the inner room filled with gold and jewels. You have won the game!");
                 Environment.Exit(0);
             }
         }
