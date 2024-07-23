@@ -8,12 +8,14 @@ class Item
     public string Name { get; set; }
     public int AttackBoost { get; set; }
     public int DefenseBoost { get; set; }
+    public int HealthBoost { get; set; }
 
-    public Item(string name, int attackBoost, int defenseBoost)
+    public Item(string name, int attackBoost, int defenseBoost, int healthBoost)
     {
         Name = name;
         AttackBoost = attackBoost;
         DefenseBoost = defenseBoost;
+        HealthBoost = healthBoost;
     }
 }
 
@@ -61,6 +63,7 @@ class Player
         Inventory.Add(item);
         Attack += item.AttackBoost;
         Defense += item.DefenseBoost;
+        Health += item.HealthBoost;
         Console.WriteLine($"You picked up {item.Name}!");
     }
 
@@ -160,16 +163,20 @@ class Dungeon
         Rooms = new List<Room>
         {
             new Room("Room 1: A dimly lit room with cobwebs everywhere.", new Monster("Goblin", 30, 10)),
-            new Room("Room 2: A dusty library with ancient books.", null, new List<Item> { new Item("Shield", 0, 10) }),
+            new Room("Room 2: A dusty library with ancient books.", null, new List<Item> { new Item("Shield", 0, 10, 0) }),
             new Room("Room 3: A cold room with an eerie silence.", new Monster("Zombie", 40, 15)),
-            new Room("Room 4: A brightly lit room with high ceilings.", new Monster("Dragon", 100, 20), null,
-                new Room("Inner Room: A room filled with gold and jewels. You've won the game!"))
+            new Room("Room 4: A brightly lit room with high ceilings.", new Monster("Dragon", 100, 20))
         };
 
         // Add an inner room with a sword to room 1
-        Rooms[0].InnerRoom = new Room("Inner Room: A small armory with a shining sword.", null, new List<Item> { new Item("Sword", 10, 0) });
-
+        Rooms[0].InnerRoom = new Room("Inner Room: A small armory with a shining sword.", null, new List<Item> { new Item("Sword", 10, 0, 0) });
         CurrentRoom = Rooms[0];
+
+        Rooms[2].InnerRoom = new Room("Inner Room: A small closet with broken bottles on shelves. Only one is intact, it's a health potion!", null, new List<Item> { new Item("Health Potion", 0, 0, 30)});
+        CurrentRoom = Rooms[2];
+
+        Rooms[3].InnerRoom = new Room("Inner Room: A room filled with gold and jewels. You've won the game!");
+        CurrentRoom = Rooms[3];
     }
     
 
@@ -211,8 +218,7 @@ class Dungeon
             }
             Console.WriteLine("3. Attack monster");
             Console.WriteLine("4. Enter inner room");
-            Console.WriteLine("5. Run away");
-            Console.WriteLine("6. Exit the room");
+            Console.WriteLine("5. Exit the room");
 
             var choice = Console.ReadLine();
 
@@ -285,10 +291,6 @@ class Dungeon
                     break;
 
                 case "5":
-                    Console.WriteLine("You run away from the room.");
-                    return;
-
-                case "6":
                     Console.WriteLine("You exit the room.");
                     return;
 
@@ -300,6 +302,11 @@ class Dungeon
             if (Player.Health <= 0)
             {
                 Console.WriteLine("You have died. Game over.");
+                Environment.Exit(0);
+            }
+            else if (CurrentRoom == Rooms[3].InnerRoom)
+            {
+                Console.WriteLine("You have entered the inner room filled with gold and jewels. You have won the game!");
                 Environment.Exit(0);
             }
         }
