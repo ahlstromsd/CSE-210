@@ -245,10 +245,10 @@ class Dungeon
         Player = player;
         Rooms = new List<Room>
         {
-            new Room("Room 1: A dimly lit room with cobwebs everywhere.", new Monster("Goblin", 30, 10)),
-            new Room("Room 2: A dusty library with ancient books.", null, new List<Item> { new Item("Shield", 0, 10, 0) }),
-            new Room("Room 3: A cold room with an eerie silence.", new Monster("Zombie", 40, 15)),
-            new Room("Room 4: A brightly lit room with high ceilings.", new Monster("Dragon", 100, 20))
+            new Room("Room 1: A dimly lit dungeon with cobwebs everywhere.", new Monster("Goblin", 30, 10)),
+            new Room("Room 2: A dusty library filled with ancient books.", null, new List<Item> { new Item("Shield", 0, 10, 0) }),
+            new Room("Room 3: A dark and cold room with an eerie silence.", new Monster("Zombie", 40, 15)),
+            new Room("Room 4: A huge, brightly lit room with high ceilings.", new Monster("Dragon", 100, 20))
         };
 
         Rooms[0].InnerRoom = new Room("Inner Room: A small armory with a shining sword.", null, new List<Item> { new Item("Sword", 10, 0, 0) });
