@@ -351,7 +351,7 @@ class Dungeon
                 case "4":
                     if ((CurrentRoom.InnerRoom != null) && (CurrentRoom.Monster == null))
                     {
-                        Console.WriteLine("You discover an inner room!");
+                        Console.WriteLine("You discover a hidden room!");
                         EnterInnerRoom(CurrentRoom.InnerRoom);
                     }
                     else
