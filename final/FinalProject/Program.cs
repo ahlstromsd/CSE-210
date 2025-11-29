@@ -70,7 +70,7 @@ class Player
     public void UsePotion()
     {
         Health = 100;
-        Console.WriteLine("You used a potion and restored your health to 100!");
+        Console.WriteLine("You used a potion and restored your health!");
     }
 
     public bool HasPotion()
